@@ -20,7 +20,7 @@ import {
   import { CrearSuscripcionDto, ActualizarSuscripcionDto, CancelarSuscripcionDto } from '../dto/suscripcion.dto';
   import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
   import { RoleGuard } from '../../auth/guards/role.guard';
-  import { Roles } from '../../auth/decorators/roles.decorator';
+  import { Roles } from '../../auth/decorators/roles.decorators';
   
   @ApiTags('suscripciones')
   @Controller('suscripciones')
