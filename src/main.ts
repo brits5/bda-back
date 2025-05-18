@@ -8,22 +8,16 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+  origin: true, // permite cualquier origen
+  credentials: true,
+});
+
   const configService = app.get(ConfigService);
   
   // Configuración global de prefijo para la API
   app.setGlobalPrefix('api');
-  
-  const allowedOrigins = [
-    'https://hackaton-banco-alimentos-production.up.railway.app',
-    'http://localhost:3000',
-  ];
-  // Configuración de CORS
-  app.enableCors({
-    origin: allowedOrigins, // TODO: Cambiar a URLs específicas en producción
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    credentials: true,
-  });
-  
+   
   // Pipes globales
   app.useGlobalPipes(
     new ValidationPipe({
