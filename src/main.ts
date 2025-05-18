@@ -15,10 +15,7 @@ async function bootstrap() {
   
   // Configuración de CORS
   app.enableCors({
-    origin: [
-      configService.get('app.frontendUrl'),
-      configService.get('app.adminFrontendUrl'),
-    ],
+    origin: '*', // TODO: Cambiar a URLs específicas en producción
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   });
