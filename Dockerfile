@@ -32,9 +32,6 @@ ENV DB_USERNAME=root
 ENV DB_PASSWORD=thCWTjRYhdRaJIVELSQvqswtGOFNhBHQ
 ENV DB_DATABASE=railway
 
-# Ejecuta el SQL antes de iniciar la app
-RUN mysql -h$DB_HOST -P$DB_PORT -u$DB_USERNAME -p$DB_PASSWORD $DB_DATABASE < db.sql || echo "No se pudo ejecutar db.sql, probablemente ya esté aplicado."
-
 EXPOSE 3000
 
 CMD ["node", "dist/main"]
