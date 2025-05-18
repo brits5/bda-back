@@ -314,10 +314,16 @@ export class FacturasService {
   /**
    * Envía la factura por email
    */
-  private async enviarFacturaPorEmail(
+    private async enviarFacturaPorEmail(
     factura: Factura,
     donacion: Donacion,
     email: string,
+    nombreCompleto?: string,
+    telefono?: string,
+    ubicacion?: string,
+    cedula?: string,
+    correoElectronico?: string,
+    idVoucher?: string,
   ): Promise<void> {
     try {
       // Enviar el email con la factura adjunta
@@ -325,7 +331,13 @@ export class FacturasService {
         email,
         factura.numero_factura,
         factura.total,
-        path.join(this.storagePath, factura.url_pdf.substring(1))
+        path.join(this.storagePath, factura.url_pdf.substring(1)),
+        nombreCompleto || (typeof donacion.usuario?.getNombreCompleto === 'function' ? donacion.usuario.getNombreCompleto() : ''),
+        telefono || (donacion.usuario?.telefono ?? ''),
+        ubicacion || 'Quito, Ecuador',
+        cedula || (donacion.usuario?.cedula ?? ''),
+        correoElectronico || (donacion.usuario?.correo ?? ''),
+        idVoucher || (donacion.referencia_pago ?? ''),
       );
       
       // Actualizar estado de envío
