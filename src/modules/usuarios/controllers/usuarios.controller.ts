@@ -18,8 +18,6 @@ import {
   import { ApiBearerAuth, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
   import { UsuariosService } from '../services/usuarios.service';
   import { ActualizarUsuarioDto, CambiarPasswordDto, CrearNotificacionDto } from '../dto/usuarios.dto';
-  import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-  import { RoleGuard } from '../../auth/guards/role.guard';
   import { Roles } from '../../auth/decorators/roles.decorators';
   
   @ApiTags('usuarios')
@@ -36,7 +34,6 @@ import {
       description: 'Lista paginada de usuarios' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Get()
     async findAll(
@@ -69,7 +66,6 @@ import {
       description: 'Usuario no encontrado' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -82,7 +78,6 @@ import {
       description: 'Perfil del usuario' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('perfil')
     async getPerfil(@Req() req) {
       return this.usuariosService.findOne(req.user.userId);
@@ -94,7 +89,6 @@ import {
       description: 'Perfil actualizado exitosamente' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Put('perfil')
     async updatePerfil(@Body() updateUsuarioDto: ActualizarUsuarioDto, @Req() req) {
       return this.usuariosService.update(req.user.userId, updateUsuarioDto);
@@ -110,7 +104,6 @@ import {
       description: 'Error al cambiar contraseña' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Post('cambiar-password')
     async cambiarPassword(@Body() cambiarPasswordDto: CambiarPasswordDto, @Req() req) {
       const result = await this.usuariosService.changePassword(
@@ -131,7 +124,6 @@ import {
       description: 'Cuenta desactivada exitosamente' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Post('desactivar')
     async desactivarCuenta(@Req() req) {
       const result = await this.usuariosService.deactivate(req.user.userId);
@@ -150,7 +142,6 @@ import {
       description: 'Cuenta desactivada exitosamente' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Post(':id/desactivar')
     async desactivarCuentaAdmin(@Param('id', ParseIntPipe) id: number) {
@@ -170,7 +161,6 @@ import {
       description: 'Lista de notificaciones' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('notificaciones')
     async getNotificaciones(@Req() req, @Query('leidas') leidas?: boolean) {
       const leidasParam = leidas === undefined ? null : leidas === true;
@@ -188,7 +178,6 @@ import {
       description: 'Notificación no encontrada' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Patch('notificaciones/:id/leer')
     async markNotificacionAsRead(@Param('id', ParseIntPipe) id: number, @Req() req) {
       const result = await this.usuariosService.markNotificacionAsRead(id, req.user.userId);
@@ -206,7 +195,6 @@ import {
       description: 'Todas las notificaciones marcadas como leídas' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Post('notificaciones/leer-todas')
     async markAllNotificacionesAsRead(@Req() req) {
       const result = await this.usuariosService.markAllNotificacionesAsRead(req.user.userId);
@@ -224,7 +212,6 @@ import {
       description: 'Notificación creada exitosamente' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Post('notificaciones')
     async createNotificacion(@Body() createNotificacionDto: CrearNotificacionDto) {
@@ -237,7 +224,6 @@ import {
       description: 'Historial de donaciones' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('donaciones')
     async getDonaciones(@Req() req) {
       return this.usuariosService.getDonaciones(req.user.userId);
@@ -249,7 +235,6 @@ import {
       description: 'Lista de suscripciones' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('suscripciones')
     async getSuscripciones(@Req() req) {
       return this.usuariosService.getSuscripciones(req.user.userId);
@@ -261,7 +246,6 @@ import {
       description: 'Lista de recompensas' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('recompensas')
     async getRecompensas(@Req() req) {
       return this.usuariosService.getRecompensas(req.user.userId);
@@ -273,7 +257,6 @@ import {
       description: 'Estadísticas del usuario' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('estadisticas')
     async getEstadisticas(@Req() req) {
       return this.usuariosService.getEstadisticas(req.user.userId);
@@ -288,7 +271,6 @@ import {
       description: 'Resultados de la búsqueda' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Get('buscar')
     async buscar(
@@ -316,7 +298,6 @@ import {
       description: 'Resumen enviado exitosamente' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Post(':id/enviar-resumen')
     async enviarResumen(@Param('id', ParseIntPipe) id: number) {

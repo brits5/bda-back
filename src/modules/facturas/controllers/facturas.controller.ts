@@ -19,7 +19,6 @@ import {
   import { createReadStream } from 'fs';
   import { join } from 'path';
   import { FacturasService } from '../services/facturas.services';
-  import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
   import { CrearDatosFiscalesDto, SolicitarFacturaDto } from '../dto/factura.dto';
   import { ConfigService } from '@nestjs/config';
   
@@ -42,7 +41,6 @@ import {
       description: 'Factura no encontrada',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get(':id')
     async findOne(@Param('id') id: number, @Req() req) {
       const factura = await this.facturasService.findOne(id);
@@ -70,7 +68,6 @@ import {
       description: 'Factura no encontrada',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('buscar')
     async findByNumero(@Query('numero') numero: string, @Req() req) {
       const factura = await this.facturasService.findByNumero(numero);
@@ -93,7 +90,6 @@ import {
       description: 'Lista de facturas del usuario',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('mis-facturas')
     async findUserFacturas(@Req() req) {
       return this.facturasService.findByUsuario(req.user.userId);
@@ -110,7 +106,6 @@ import {
       description: 'Factura no encontrada',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get(':id/pdf')
     async downloadPdf(@Param('id') id: number, @Res({ passthrough: true }) res: Response, @Req() req) {
       const factura = await this.facturasService.findOne(id);
@@ -154,7 +149,6 @@ import {
       description: 'Error al reenviar la factura',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Post(':id/reenviar')
     async resendFactura(
       @Param('id') id: number,
@@ -187,7 +181,6 @@ import {
       description: 'Datos fiscales del usuario',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('datos-fiscales')
     async getDatosFiscales(@Req() req) {
       return this.facturasService.findDatosFiscalesByUsuario(req.user.userId);
@@ -199,7 +192,6 @@ import {
       description: 'Datos fiscales creados o actualizados exitosamente',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Post('datos-fiscales')
     async createDatosFiscales(@Body() datosFiscalesDto: CrearDatosFiscalesDto, @Req() req) {
       const datosFiscales = await this.facturasService.createOrUpdateDatosFiscales(
@@ -223,7 +215,6 @@ import {
       description: 'Error al generar la factura',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Post('solicitar')
     async solicitarFactura(@Body() solicitarFacturaDto: SolicitarFacturaDto, @Req() req) {
       const factura = await this.facturasService.generarFacturaManual(

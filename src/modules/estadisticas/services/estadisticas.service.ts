@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Between, MoreThan, LessThan } from 'typeorm';
-import { EstadisticaMensual } from '../entities/estadistica-mensual.entity';
+import { EstadisticaMensual } from '../entities/estadistica-mensual';
 import { Donacion } from '../../donaciones/entities/donacion.entity';
 import { Suscripcion } from '../../suscripciones/entities/suscripcion.entity';
 import { Usuario } from '../../usuarios/entities/usuario.entity';
@@ -132,7 +132,7 @@ export class EstadisticasService {
       .getRawOne();
 
     // Obtener detalles de la campaña principal
-    let campañaDetalle = null;
+    let campañaDetalle: Campana | null = null;
     if (campañaPrincipal && campañaPrincipal.id_campana) {
       campañaDetalle = await this.campanasRepository.findOne({
         where: { id_campana: campañaPrincipal.id_campana }
@@ -197,7 +197,13 @@ export class EstadisticasService {
       .getRawMany();
     
     // Obtener detalles de los top donantes
-    const topDonantesDetalle = [];
+    const topDonantesDetalle: Array<{
+      id_usuario: number;
+      nombre: string;
+      total_donado: any;
+      cantidad_donaciones: any;
+      nivel_donante: string;
+    }> = [];
     for (const donante of topDonantes) {
       const usuario = await this.usuariosRepository.findOne({
         where: { id_usuario: donante.id_usuario }
@@ -229,7 +235,7 @@ export class EstadisticasService {
   /**
    * Actualiza las estadísticas del mes anterior (tarea programada)
    */
-  @Cron(CronExpression.FIRST_DAY_OF_MONTH_AT_MIDNIGHT)
+  @Cron(CronExpression.EVERY_1ST_DAY_OF_MONTH_AT_MIDNIGHT)
   async actualizarEstadisticasMensual() {
     this.logger.log('Actualizando estadísticas mensuales...');
     

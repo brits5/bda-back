@@ -17,8 +17,6 @@ import {
   import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
   import { CampanasService } from '../services/campanas.service';
   import { CrearCampanaDto, ActualizarCampanaDto } from '../dto/campana.dto';
-  import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-  import { RoleGuard } from '../../auth/guards/role.guard';
   import { Roles } from '../../auth/decorators/roles.decorators';
   
   @ApiTags('campanas')
@@ -79,7 +77,6 @@ import {
       description: 'Campaña creada exitosamente' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Post()
     @HttpCode(HttpStatus.CREATED)
@@ -97,7 +94,6 @@ import {
       description: 'Campaña no encontrada' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Put(':id')
     async update(@Param('id', ParseIntPipe) id: number, @Body() updateCampanaDto: ActualizarCampanaDto) {
@@ -110,7 +106,6 @@ import {
       description: 'Estado actualizado exitosamente' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Put(':id/estado')
     async cambiarEstado(
@@ -164,7 +159,6 @@ import {
       description: 'Estadísticas de campañas' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Get('estadisticas')
     async obtenerEstadisticas() {
@@ -177,7 +171,6 @@ import {
       description: 'Operación exitosa' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Post(':id/seguir')
     async seguirCampana(
       @Param('id', ParseIntPipe) id: number,

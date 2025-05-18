@@ -18,8 +18,6 @@ import {
   import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
   import { SuscripcionesService } from '../services/suscripciones.service';
   import { CrearSuscripcionDto, ActualizarSuscripcionDto, CancelarSuscripcionDto } from '../dto/suscripcion.dto';
-  import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-  import { RoleGuard } from '../../auth/guards/role.guard';
   import { Roles } from '../../auth/decorators/roles.decorators';
   
   @ApiTags('suscripciones')
@@ -36,7 +34,6 @@ import {
       description: 'Lista paginada de suscripciones' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Get()
     async findAll(
@@ -66,7 +63,6 @@ import {
       description: 'Lista paginada de suscripciones del usuario' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get('mis-suscripciones')
     async findMisSuscripciones(
       @Req() req,
@@ -92,7 +88,6 @@ import {
       description: 'Suscripción no encontrada' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get(':id')
     async findOne(@Param('id', ParseIntPipe) id: number, @Req() req) {
       const suscripcion = await this.suscripcionesService.findOne(id);
@@ -111,7 +106,6 @@ import {
       description: 'Suscripción creada exitosamente' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Post()
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() createSuscripcionDto: CrearSuscripcionDto, @Req() req) {
@@ -128,7 +122,6 @@ import {
       description: 'Suscripción no encontrada' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Put(':id')
     async update(
       @Param('id', ParseIntPipe) id: number, 
@@ -148,7 +141,6 @@ import {
       description: 'Suscripción no encontrada' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Delete(':id')
     async cancelar(
       @Param('id', ParseIntPipe) id: number, 
@@ -164,7 +156,6 @@ import {
       description: 'Estadísticas de suscripciones' 
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard, RoleGuard)
     @Roles('admin')
     @Get('estadisticas')
     async obtenerEstadisticas() {

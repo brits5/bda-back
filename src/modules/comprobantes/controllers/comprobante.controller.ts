@@ -17,10 +17,8 @@ import {
   import { Response } from 'express';
   import { createReadStream } from 'fs';
   import { join } from 'path';
-  import { ComprobantesService } from '../services/comprobantes.service';
-  import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-  import { RoleGuard } from '../../auth/guards/role.guard';
   import { ConfigService } from '@nestjs/config';
+  import { ComprobantesService } from '../services/comprobantes.service';
   
   @ApiTags('comprobantes')
   @Controller('comprobantes')
@@ -41,7 +39,6 @@ import {
       description: 'Comprobante no encontrado',
     })
     @ApiBearerAuth()
-    @UseGuards(JwtAuthGuard)
     @Get(':id')
     async findOne(@Param('id') id: number, @Req() req) {
       const comprobante = await this.comprobantesService.findOne(id);
