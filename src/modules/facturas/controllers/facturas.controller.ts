@@ -214,7 +214,6 @@ import {
       status: HttpStatus.BAD_REQUEST,
       description: 'Error al generar la factura',
     })
-    @ApiBearerAuth()
     @Post('solicitar')
     async solicitarFactura(@Body() solicitarFacturaDto: SolicitarFacturaDto, @Req() req) {
       const factura = await this.facturasService.generarFacturaManual(

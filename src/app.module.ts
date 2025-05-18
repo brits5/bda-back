@@ -49,7 +49,7 @@ import storageConfig from './config/storage.config';
         database: configService.get('database.database'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         migrations: [__dirname + '/database/migrations/*{.ts,.js}'],
-        synchronize: configService.get('database.synchronize'),
+        synchronize: true,
         logging: configService.get('database.logging'),
         charset: 'utf8mb4',
       }),

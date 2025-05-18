@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, IsEmail, IsOptional, IsBoolean, IsEnum, MinLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsEmail, IsOptional, IsBoolean, IsEnum, MinLength, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
+
 
 export class CrearDatosFiscalesDto {
   @ApiProperty({ example: 'PEJM850615H01', description: 'RFC o identificación fiscal' })
@@ -48,6 +49,8 @@ export class SolicitarFacturaDto {
   id_donacion: number;
 
   @ApiProperty({ description: 'Datos fiscales para la factura' })
+  @ValidateNested()  // Añade este decorador
+  @Type(() => CrearDatosFiscalesDto)  // Añade este decorador
   datos_fiscales: CrearDatosFiscalesDto;
 }
 
