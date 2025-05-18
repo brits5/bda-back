@@ -1,18 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsuariosModule } from '../modules/usuarios/usuarios.module';
-
+import { UsuariosModule } from './modules/usuarios/usuarios.module';
 import { CampanasModule } from './modules/campanas/campanas.module';
 import { DonacionesModule } from './modules/donaciones/donaciones.module';
 import { SuscripcionesModule } from './modules/suscripciones/suscripciones.module';
-import { ComprobantesModule } from './modules/comprobantes/comprobantes.module';
+import { ComprobantesModule } from './modules/comprobantes/comprobante.module';
+
 import { FacturasModule } from './modules/facturas/facturas.module';
 import { RecompensasModule } from './modules/recompensas/recompensas.module';
 import { EstadisticasModule } from './modules/estadisticas/estadisticas.module';
-import { TestimoniosModule } from './modules/testimonios/testimonios.module';
 import { ConfiguracionesModule } from './modules/configuraciones/configuraciones.module';
-import { PagosModule } from './modules/pagos/pagos.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import appConfig from './config/app.config';
@@ -70,9 +68,7 @@ import storageConfig from './config/storage.config';
     FacturasModule,
     RecompensasModule,
     EstadisticasModule,
-    TestimoniosModule,
     ConfiguracionesModule,
-    PagosModule,
   ],
 })
 export class AppModule {}

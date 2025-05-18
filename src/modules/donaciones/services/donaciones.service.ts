@@ -1,16 +1,17 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between, MoreThan, LessThan, FindOptionsWhere } from 'typeorm';
+import { Repository, DeepPartial, Between, MoreThan, LessThan, FindOptionsWhere } from 'typeorm';
 import { Donacion } from '../entities/donacion.entity';
 import { Usuario } from '../../usuarios/entities/usuario.entity';
 import { Campana } from '../../campanas/entities/campana.entity';
 import { CrearDonacionDto } from '../dto/donacion.dto';
 import { ComprobantesService } from '../../comprobantes/services/comprobantes.service';
 
-import { FacturasService } from '../../facturas/services/facturas.service';
-import { ConfiguracionesService } from '../../configuraciones/services/configuraciones.service';
+import { FacturasService } from '../../facturas/services/facturas.services';
+import { ConfiguracionesService } from '../../configuraciones/services/configuraciones.services';
 import { paginate, Pagination, IPaginationOptions } from 'nestjs-typeorm-paginate';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+;
 
 @Injectable()
 export class DonacionesService {
@@ -63,24 +64,26 @@ export class DonacionesService {
    * Crea una nueva donación
    */
   async create(createDonacionDto: CrearDonacionDto): Promise<Donacion> {
-    const { id_usuario, id_campana, ...donacionData } = createDonacionDto;
+  const { id_usuario, id_campana, ...restDonacionData } = createDonacionDto;
 
-    // Crear la entidad donación
-    const donacion = this.donacionesRepository.create({
-      ...donacionData,
-      id_usuario: id_usuario || null,
-      id_campana: id_campana || null,
-      estado: 'Pendiente', // Estado inicial
-    });
+  // Crear la entidad donación usando DeepPartial<Donacion>
+  const donacionData: DeepPartial<Donacion> = {
+    ...restDonacionData,
+    id_usuario: id_usuario ?? undefined,
+    id_campana: id_campana ?? undefined,
+    estado: 'Pendiente',
+  };
+  
+    const donacion = this.donacionesRepository.create(donacionData);
 
     // Calcular puntos a otorgar según configuración
     const puntosPorDolar = await this.configuracionesService.obtenerValorNumerico('puntos_por_dolar', 1);
     donacion.puntos_otorgados = Math.floor(donacion.monto * puntosPorDolar);
 
-    // Guardar la donación
-    const donacionGuardada = await this.donacionesRepository.save(donacion);
+    // Guardar la donación - especificar que es una sola entidad, no un array
+    const donacionGuardada = await this.donacionesRepository.save(donacion as Donacion);
 
-    // Emitir evento para procesos asíncronos (webhooks, notificaciones, etc.)
+    // Emitir evento para procesos asíncronos
     this.eventEmitter.emit('donacion.created', donacionGuardada);
 
     return donacionGuardada;
