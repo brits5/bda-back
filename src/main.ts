@@ -13,9 +13,13 @@ async function bootstrap() {
   // Configuración global de prefijo para la API
   app.setGlobalPrefix('api');
   
+  const allowedOrigins = [
+    'hackaton-banco-alimentos-production.up.railway.app',
+    'http://localhost:3000/',
+  ];
   // Configuración de CORS
   app.enableCors({
-    origin: '*', // TODO: Cambiar a URLs específicas en producción
+    origin: allowedOrigins, // TODO: Cambiar a URLs específicas en producción
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true,
   });
