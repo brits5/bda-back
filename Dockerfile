@@ -26,6 +26,10 @@ COPY --from=builder /app/.env .env
 COPY --from=builder /app/sql/db.sql ./db.sql
 
 # Variables de entorno para acceso a la DB (puedes usar ARG si prefieres)
+
+COPY .env .env
+COPY sql/db.sql ./db.sql
+
 ENV DB_HOST=mysql.railway.internal
 ENV DB_PORT=3306
 ENV DB_USERNAME=root
